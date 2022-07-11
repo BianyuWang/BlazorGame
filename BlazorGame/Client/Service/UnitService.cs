@@ -16,7 +16,7 @@ namespace BlazorGame.Client.Service
         {
             MyUnitList = new List<Unit>();
         }
-        public void AddUnit(int unitTypeId)
+        public Unit AddUnit(int unitTypeId)
         {
             Unit unit; 
             switch (unitTypeId)
@@ -38,7 +38,7 @@ namespace BlazorGame.Client.Service
             }
             unit.Id = MyUnitList.Count + 1;
             MyUnitList.Add(unit);
-
+            return unit;
         }
 
         public void Attack(Unit Attacker, Unit Defender)

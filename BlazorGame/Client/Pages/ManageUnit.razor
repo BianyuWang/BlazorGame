@@ -26,9 +26,9 @@
 
            
         </RadzenCard>
-@if (MyUnits != null)
+@if (StateService.TotalUnits != null)
 {
-    foreach (var u in MyUnits)
+    foreach (var u in StateService.TotalUnits)
     {
         <div class="col-lg-6 col-xl-4 offset-lg-3 offset-xl-4">
 
@@ -49,13 +49,14 @@
 }
 @code {
     public IList<Unit> unitTypeList;
-    public IList<Unit> MyUnits;
+  //  public IList<Unit> MyUnits;
     public int UnitSelected;
     protected override void OnInitialized()
     {
 
         unitTypeList = UnitService.GetUnitType();
         UnitSelected = unitTypeList.First().Id;
+        StateService.OnChange += StateHasChanged;
     }
 
     void OnChange(object value)
@@ -70,10 +71,17 @@
         var cost = unitTypeList.Where(u => u.Id == selectedId).First().Cost;
 
 
-        UnitService.AddUnit(selectedId);
+        var unit =  UnitService.AddUnit(selectedId);
         StateService.UseCoin(cost);
-        MyUnits =  UnitService.GetMyUnit();
-        StateHasChanged();
+        //  MyUnits =  UnitService.GetMyUnit();
+        StateService.AddUnit(unit);
+      
+
+    }
+    public void Dispose()
+    {
+
+        StateService.OnChange -= StateHasChanged;
 
     }
 }

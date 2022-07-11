@@ -1,13 +1,20 @@
-﻿namespace BlazorGame.Client.Service
+﻿using BlazorGame.Shared.Models;
+
+namespace BlazorGame.Client.Service
 {
     public interface IStateService
     {
        int TotalCoin { get; set; }
 
-      event Action OnChange; 
+        List<Unit> TotalUnits { get; set; }
+       
+        event Action OnChange; 
 
       void  UseCoin(int cost);
 
       void  RefoundCoin(int refound);
+
+        void AddUnit(Unit newUnit);
+     
     }
 }
