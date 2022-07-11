@@ -1,4 +1,5 @@
 ﻿@page "/ManageUnit"
+@inject NavigationManager NavigationManager
 
 
 @inject IUnitService UnitService
@@ -6,61 +7,64 @@
 @inject NotificationService NotificationService
 @inject Radzen.DialogService DialogService
 
-   @using BlazorGame.Shared.Models
+@using BlazorGame.Shared.Models
 
 <h3>Manage your Units</h3>
 
-       <RadzenCard>
-            <h4 class="mb-4">Hire a hero</h4>
-            <div class="row">
+<RadzenCard>
+    <h4 class="mb-4">Hire a hero</h4>
+    <div class="row">
 
-                <div class="col-7"> <RadzenDropDownDataGrid TValue="int" AllowClear="true" 
-                                        Data=@(unitTypeList) Style="width: 90%" AllowColumnResize="true"
-                                        TextProperty="Title" ValueProperty="Id" AllowFiltering= "false"
-                                        Change=@(args => OnChange(args))>
-                                        <Template>
-                                                  Type: @((context as Unit).Title) , Cost : @((context as Unit).Cost)
-                                        </Template>
-                                    </RadzenDropDownDataGrid>
-                                    </div>
-                <div class="col-3">     <RadzenButton Disabled = "@StateService.DisableBtnClick" Icon="check_circle"  Click=@(args => OnClick(@UnitSelected)) ButtonStyle="ButtonStyle.Success" />Hire</div>
-            </div>
-  
-        </RadzenCard>
+        <div class="col-7">
+            <RadzenDropDownDataGrid TValue="int" AllowClear="true"
+                                    Data=@(unitTypeList) Style="width: 90%" AllowColumnResize="true"
+                                    TextProperty="Title" ValueProperty="Id" AllowFiltering="false"
+                                    Change=@(args => OnChange(args))>
+                <Template>
+                    Type: @((context as Unit).Title) , Cost : @((context as Unit).Cost)
+                </Template>
+            </RadzenDropDownDataGrid>
+        </div>
+        <div class="col-5">  
+            <RadzenButton Disabled="@StateService.DisableBtnClick" Icon="add_shopping_cart" Click=@(args => OnClick(@UnitSelected)) ButtonStyle="ButtonStyle.Success" />Hire Hero</div>
+    </div>
 
-
+</RadzenCard>
 
 @if (StateService.TotalUnits != null)
 {
+    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@StateService.TotalUnits" TItem="Unit" PageSize="10">
+        <Template Context="unit">
+            <RadzenCard Style="max-width:300px;">
+                <div class="row">
+                    <div class="col-md-7"> <h3 class="h5 unit-title ">@unit.Title.ToUpper()</h3> </div>
+                    <div class="col-md-4" style="text-align: right;">
+                        <RadzenButton ButtonStyle="Radzen.ButtonStyle.Danger"
+                                  Icon="close" Size="Radzen.ButtonSize.Small"
+                                  Click="@(arg=>DeleteUnit(unit.Id))">
 
-        <RadzenDataList WrapItems="true" AllowPaging="true" Data="@StateService.TotalUnits" TItem="Unit" PageSize="10">
-                            <Template Context="unit">
-                                <RadzenCard Style="max-width:300px;">
-                                    <div class="row">
-<div class="col-md-7"> <h3 class="h5 unit-title ">@unit.Title.ToUpper()</h3> </div>   
- <div class="col-md-4" style="text-align: right;">
-                                            <RadzenButton ButtonStyle="Radzen.ButtonStyle.Danger" 
-                                            Icon="close" Size="Radzen.ButtonSize.Small"
-                                            Click = "@(arg=>DeleteUnit(unit.Id))"
-                                            >
-                                            
-                                        </RadzenButton>
-                                        </div>
-                                         </div>   
+                        </RadzenButton>
+                    </div>
+                </div>
                 <div class="d-flex flex-row">
                     <RadzenImage Path=@($"img/{unit.Title}.jpg") Class="rounded-circle float-left mr-3" Style="width: 100px; height: 100px;" />
                     <div>
-                         <div><span>HP :  </span>@unit.HitPoint</div>
-                         <div><span>Defense :  </span>@unit.Defense</div>
-                          <div><span>Attack :  </span>@unit.Attack</div>                    
-                           <div><span>Return Point :  </span>@unit.RefoundCoin</div>
+                        <div><span>HP :  </span>@unit.HitPoint</div>
+                        <div><span>Defense :  </span>@unit.Defense</div>
+                        <div><span>Attack :  </span>@unit.Attack</div>
+                        <div><span>Return Point :  </span>@unit.RefoundCoin</div>
                     </div>
                 </div>
 
-                                </RadzenCard>
-                            </Template>
-                        </RadzenDataList>
-
+            </RadzenCard>
+        </Template>
+    </RadzenDataList>
+    <br />
+    <br />
+    @if (StateService.DisableBtnClick)
+    {
+       <RadzenButton  Text="Fight With Com_Monster" Click = "(()=>BeginFight())" Icon="build" ButtonStyle="ButtonStyle.Danger" />
+    }
 
 }
 @code {
@@ -71,7 +75,7 @@
     protected override void OnInitialized()
     {
 
-        unitTypeList = UnitService.GetUnitType();      
+        unitTypeList = UnitService.GetUnitType();
         StateService.OnChange += StateHasChanged;
         DialogService.OnOpen += Open;
         DialogService.OnClose += Close;
@@ -95,9 +99,9 @@
         if (selectedId == 0)
 
         {
-               await DialogService.OpenAsync("Please Select A Unit From Drop List", ds =>
-        @<div>
-            Click outside to close this Dialog
+            await DialogService.OpenAsync("Please Select A Unit From Drop List", ds =>
+    @<div>
+        Click outside to close this Dialog
     </div>
     , new DialogOptions() { CloseDialogOnOverlayClick = true });
         }
@@ -108,8 +112,8 @@
 
             if (StateService.TotalCoin < cost)
             {
-                ShowNotification(new NotificationMessage {Style = "position: absolute; left: -1000px;top:-50px", Severity = NotificationSeverity.Error, Summary = "Oops :(", Detail = "Not Enough Lucky Cat Coin", Duration = 4000 });
-                return;  
+                ShowNotification(new NotificationMessage { Style = "position: absolute; left: -1000px;top:-50px", Severity = NotificationSeverity.Error, Summary = "Oops :(", Detail = "Not Enough Lucky Cat Coin", Duration = 4000 });
+                return;
             }
             var unit = UnitService.AddUnit(selectedId);
             StateService.UseCoin(cost);
@@ -118,15 +122,14 @@
         }
     }
 
-     void ShowNotification(NotificationMessage message)
+    void ShowNotification(NotificationMessage message)
     {
         NotificationService.Notify(message);
 
-       
     }
     void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
     {
-       
+
     }
 
     void Close(dynamic result)
@@ -141,7 +144,12 @@
         {
             unitTobeDelete = null;
         }
-      
+
+    }
+    public void BeginFight()
+    {
+          NavigationManager.NavigateTo("/" +
+            "fetchdata");
     }
 
     public void Dispose()
