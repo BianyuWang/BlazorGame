@@ -1,0 +1,26 @@
+﻿
+
+<RadzenDataList WrapItems="true" AllowPaging="false" Data="@item.Messages" TItem="LogMsg">
+
+
+</RadzenDataList>
+
+  <RadzenPager ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat" HorizontalAlign="HorizontalAlign.Right" Count="count" PageSize="@pageSize" PageNumbersCount="5" PageChanged="@PageChanged(@item)" />
+
+@code {
+
+    [Parameter]
+   public List<LogMsg> msgs { get; set; }
+
+    string pagingSummaryFormat = "Displaying page {0} of {1} (total {2} records)";
+    int pageSize = 1;
+
+    void PageChanged(PagerEventArgs args)
+    {
+        orders = GetInfo(args.Skip, args.Top);
+    }
+     LogMsg GetInfo(int skip, int take)
+    {
+        return dbContext.Orders.Include("Customer").Include("Employee").Skip(skip).Take(take).ToList();
+    }
+}

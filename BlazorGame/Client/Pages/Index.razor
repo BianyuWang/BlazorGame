@@ -1,4 +1,8 @@
 ﻿@page "/"
+@using Newtonsoft.Json
+@inject HttpClient Http
+@inject IDevRecordService DevRecordService
+
 
 <PageTitle>Index</PageTitle>
 
@@ -23,36 +27,20 @@ Some ideas came from  <a target="_blank" class="font-weight-bold link-dark" href
 
 <h1>Happy every day!</h1>
 
-
+@foreach(var item in infos.logs)
+{
+      int count = item.Messages.Count();
 <div class="alert alert-secondary mt-4">
     <span class="oi oi-pencil me-2" aria-hidden="true"></span>
-    <strong>11,July,2022</strong>
+    <strong>@item.DateLog</strong>
 
     <span class="text-nowrap">
-    The function of addong and deleting units has been basically compeleted.
-
+   @item.Summary
     </span>
 
 </div>
 
-  <p> 1. You can choose the hero you want to hire from the drop down list. The cost of each hero is different.
-</p> 
-    <img src="img/dropdownlist.jpg" />
-    <p>2.When you decide to hire a hero,the corresponding cost will will deducted from your bank on the top menu. And a hero will appears
-        in your inventory.(<span style="font: bold">The attributes of heros are random within a certain range. </span>)
-    </p>
-    <img src = "img/hirehero.jpg" />
-   
-    <p>
-        3. A toast pops up when you don't have enough lucky coin, and you will no longer be able to click the "Hire" button when the lucky coin is below 100.
-    </p>
-    <img src = "img/noenoughcoin.jpg" />
-
-     <p>
-        4. You can choose to let the hero go, but you will only get half of your lucky coin back......
-    </p>
-    <img src = "img/deleteunit.jpg" />
-
+}
 
 <div class="alert alert-secondary mt-4">
     <span class="oi oi-pencil me-2" aria-hidden="true"></span>
@@ -65,3 +53,16 @@ Some ideas came from  <a target="_blank" class="font-weight-bold link-dark" href
 
 </div>
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+@code{
+     
+       
+    private Root infos { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+          infos =  await Http.GetFromJsonAsync<Root>("txt/LogIndex.json");
+           
+    }
+   
+
+}

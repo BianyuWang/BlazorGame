@@ -1,0 +1,33 @@
+{
+  "logs": [
+    {
+      "DateLog": "11,July,2022",
+      "Summary": "The function of addong and deleting units has been basically compeleted.",
+      "Messages": [
+        {
+          "messageText": "You can choose the hero you want to hire from the drop down list. The cost of each hero is different.",
+          "messageImg": "img/dropdownlist.jpg"
+        },
+        {
+          "messageText": "When you decide to hire a hero,the corresponding cost will will deducted from your bank on the top menu. And a hero will appears in your inventory.(<span style='font:bold'>The attributes of heros are random within a certain range. </span>)",
+          "messageImg": "img/hirehero.jpg"
+        },
+        {
+          "messageText": "A toast pops up when you don't have enough lucky coin, and you will no longer be able to click the \"Hire\" button when the lucky coin is below 100.",
+          "messageImg": "img/noenoughcoin.jpg"
+        },
+        {
+          "messageText": "You can choose to let the hero go, but you will only get half of your lucky coin back......",
+          "messageImg": "img/deleteunit.jpg"
+        }
+      ]
+
+    }
+
+  ]
+
+
+}
+
+
+
