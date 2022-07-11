@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using BlazorGame.Client.Service;
 using Radzen;
+using Blazored.Toast;
 
 
 
@@ -14,4 +15,5 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<IUnitService, UnitService>();
 builder.Services.AddScoped<IStateService, StateService>();
 builder.Services.AddScoped<DialogService>();
+builder.Services.AddScoped<NotificationService>();
 await builder.Build().RunAsync();

@@ -10,3 +10,13 @@ justify-content :center;
 align-content :baseline;
 width: 100%
 }
+
+.sufficient {
+font:bold;
+color : black;
+}
+
+.insufficient {
+    font: bold;
+    color: red;
+}

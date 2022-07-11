@@ -6,6 +6,9 @@ namespace BlazorGame.Client.Service
     {
        int TotalCoin { get; set; }
 
+        bool DisableBtnClick { get; set; }
+        string CoinCss { get; set; }
+
         List<Unit> TotalUnits { get; set; }
        
         event Action OnChange; 

@@ -3,7 +3,7 @@
 
 @inject IUnitService UnitService
 @inject IStateService StateService
-
+@inject NotificationService NotificationService
 @inject Radzen.DialogService DialogService
 
    @using BlazorGame.Shared.Models
@@ -23,10 +23,9 @@
                                         </Template>
                                     </RadzenDropDownDataGrid>
                                     </div>
-                <div class="col-3">     <RadzenButton Icon="check_circle"  Click=@(args => OnClick(@UnitSelected)) ButtonStyle="ButtonStyle.Success" />Hire</div>
+                <div class="col-3">     <RadzenButton Disabled = "@StateService.DisableBtnClick" Icon="check_circle"  Click=@(args => OnClick(@UnitSelected)) ButtonStyle="ButtonStyle.Success" />Hire</div>
             </div>
-
-           
+  
         </RadzenCard>
 
 
@@ -72,8 +71,7 @@
     protected override void OnInitialized()
     {
 
-        unitTypeList = UnitService.GetUnitType();
-        UnitSelected = unitTypeList.First().Id;
+        unitTypeList = UnitService.GetUnitType();      
         StateService.OnChange += StateHasChanged;
         DialogService.OnOpen += Open;
         DialogService.OnClose += Close;
@@ -91,27 +89,44 @@
 
         DialogService.Confirm($"Are you sure to delete {unitTobeDelete.Title}? Only half of your fee ({unitTobeDelete.RefoundCoin}) will be refounded?", "Delete Unit", new ConfirmOptions() { OkButtonText = "Ok", CancelButtonText = "No!!" });
 
-
-
     }
-    void OnClick(int selectedId)
+    async Task OnClick(int selectedId)
     {
+        if (selectedId == 0)
 
-        //get cost of selected unit
-        var cost = unitTypeList.Where(u => u.Id == selectedId).First().Cost;
+        {
+               await DialogService.OpenAsync("Please Select A Unit From Drop List", ds =>
+        @<div>
+            Click outside to close this Dialog
+    </div>
+    , new DialogOptions() { CloseDialogOnOverlayClick = true });
+        }
+        else
+        {
+            //get cost of selected unit
+            var cost = unitTypeList.Where(u => u.Id == selectedId).First().Cost;
 
-
-        var unit =  UnitService.AddUnit(selectedId);
-        StateService.UseCoin(cost);
-        //  MyUnits =  UnitService.GetMyUnit();
-        StateService.AddUnit(unit);
-
-
+            if (StateService.TotalCoin < cost)
+            {
+                ShowNotification(new NotificationMessage {Style = "position: absolute; left: -1000px;top:-200px", Severity = NotificationSeverity.Error, Summary = "Oops :(", Detail = "Not Enough Lucky Cat Coin", Duration = 4000 });
+                return;  
+            }
+            var unit = UnitService.AddUnit(selectedId);
+            StateService.UseCoin(cost);
+            //  MyUnits =  UnitService.GetMyUnit();
+            StateService.AddUnit(unit);
+        }
     }
 
+     void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
+
+       
+    }
     void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
     {
-        // console.Log("Dialog opened");
+       
     }
 
     void Close(dynamic result)
@@ -126,12 +141,12 @@
         {
             unitTobeDelete = null;
         }
-        //  console.Log($"Dialog closed");
+      
     }
 
     public void Dispose()
     {
-           DialogService.OnOpen -= Open;
+        DialogService.OnOpen -= Open;
         DialogService.OnClose -= Close;
         StateService.OnChange -= StateHasChanged;
 

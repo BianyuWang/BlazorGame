@@ -2,13 +2,16 @@
 @implements IDisposable
 
 <div class="top-menu">
-    <img class="topImg" src="img/coin.png" /> <span>@StateService.TotalCoin</span>
+    <img class="topImg" src="img/luckyCatCoin.jpg" />
+    <span class = "@StateService.CoinCss" >@StateService.TotalCoin</span>
 </div>
 
 @code {
+  //  string cssClass => StateService.CoinCss;
     protected override void OnInitialized()
     {
         StateService.OnChange += StateHasChanged;
+        
     }
 
     public void Dispose()
