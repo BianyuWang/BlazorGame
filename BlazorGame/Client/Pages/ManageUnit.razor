@@ -2,6 +2,7 @@
 
 
 @inject IUnitService UnitService
+@inject IStateService StateService
 
    @using BlazorGame.Shared.Models
 
@@ -65,8 +66,12 @@
     void OnClick(int selectedId)
     {
 
+        //get cost of selected unit
+        var cost = unitTypeList.Where(u => u.Id == selectedId).First().Cost;
+
 
         UnitService.AddUnit(selectedId);
+        StateService.UseCoin(cost);
         MyUnits =  UnitService.GetMyUnit();
         StateHasChanged();
 

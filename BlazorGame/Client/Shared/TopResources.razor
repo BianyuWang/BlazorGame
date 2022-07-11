@@ -1,8 +1,20 @@
-﻿<div class="top-menu">
-    <img class="topImg" src="img/coin.png" /> <span>@coins</span>
+﻿@inject IStateService StateService
+@implements IDisposable
+
+<div class="top-menu">
+    <img class="topImg" src="img/coin.png" /> <span>@StateService.TotalCoin</span>
 </div>
 
 @code {
-    public int coins { get; set; } = 1000;
+    protected override void OnInitialized()
+    {
+        StateService.OnChange += StateHasChanged;
+    }
 
+    public void Dispose()
+    {
+
+        StateService.OnChange -= StateHasChanged;
+
+    }
 }

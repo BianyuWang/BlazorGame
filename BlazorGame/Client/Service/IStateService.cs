@@ -6,8 +6,8 @@
 
       event Action OnChange; 
 
-      void  UseCoin();
+      void  UseCoin(int cost);
 
-      void  RefoundCoin();
+      void  RefoundCoin(int refound);
     }
 }
