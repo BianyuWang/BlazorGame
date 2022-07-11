@@ -2,8 +2,12 @@
 {
     public interface IStateService
     {
-        public int TotalCoin { get; set; }
+       int TotalCoin { get; set; }
 
-        public event OnChange { get; set; }
+      event Action OnChange; 
+
+      void  UseCoin();
+
+      void  RefoundCoin();
     }
 }
