@@ -16,6 +16,12 @@ namespace BlazorGame.Client.Service
             OnChange?.Invoke();
         }
 
+        public void DeleteUnit(Unit unitToBeDel)
+        {
+            TotalUnits.Remove(unitToBeDel);
+            OnChange?.Invoke();
+        }
+
         public void RefoundCoin(int refound)
         {
             TotalCoin += refound;

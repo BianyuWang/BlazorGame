@@ -4,6 +4,8 @@
 @inject IUnitService UnitService
 @inject IStateService StateService
 
+@inject Radzen.DialogService DialogService
+
    @using BlazorGame.Shared.Models
 
 <h3>Manage your Units</h3>
@@ -26,42 +28,70 @@
 
            
         </RadzenCard>
+
+
+
 @if (StateService.TotalUnits != null)
 {
-    foreach (var u in StateService.TotalUnits)
-    {
-        <div class="col-lg-6 col-xl-4 offset-lg-3 offset-xl-4">
 
-         <RadzenCard class="m-3">
-                <h3 class="h5 unit-title">@u.Title.ToUpper()</h3>
+        <RadzenDataList WrapItems="true" AllowPaging="true" Data="@StateService.TotalUnits" TItem="Unit" PageSize="10">
+                            <Template Context="unit">
+                                <RadzenCard Style="max-width:300px;">
+                                    <div class="row">
+<div class="col-md-7"> <h3 class="h5 unit-title ">@unit.Title.ToUpper()</h3> </div>   
+ <div class="col-md-4" style="text-align: right;">
+                                            <RadzenButton ButtonStyle="Radzen.ButtonStyle.Danger" 
+                                            Icon="close" Size="Radzen.ButtonSize.Small"
+                                            Click = "@(arg=>DeleteUnit(unit.Id))"
+                                            >
+                                            
+                                        </RadzenButton>
+                                        </div>
+                                         </div>   
                 <div class="d-flex flex-row">
-                    <RadzenImage Path=@($"img/{u.Title}.jpg") Class="rounded-circle float-left mr-3" Style="width: 100px; height: 100px;" />
+                    <RadzenImage Path=@($"img/{unit.Title}.jpg") Class="rounded-circle float-left mr-3" Style="width: 100px; height: 100px;" />
                     <div>
-                         <div><span>HP :  </span>@u.HitPoint</div>
-                         <div><span>Defense :  </span>@u.Defense</div>
-                          <div><span>Attack :  </span>@u.Attack</div>                    
-                           <div><span>Return Point :  </span>@u.ReturnPoint</div>
+                         <div><span>HP :  </span>@unit.HitPoint</div>
+                         <div><span>Defense :  </span>@unit.Defense</div>
+                          <div><span>Attack :  </span>@unit.Attack</div>                    
+                           <div><span>Return Point :  </span>@unit.RefoundCoin</div>
                     </div>
                 </div>
-            </RadzenCard>
-            </div>
-}
+
+                                </RadzenCard>
+                            </Template>
+                        </RadzenDataList>
+
+
 }
 @code {
     public IList<Unit> unitTypeList;
-  //  public IList<Unit> MyUnits;
+
     public int UnitSelected;
+    public Unit unitTobeDelete;
     protected override void OnInitialized()
     {
 
         unitTypeList = UnitService.GetUnitType();
         UnitSelected = unitTypeList.First().Id;
         StateService.OnChange += StateHasChanged;
+        DialogService.OnOpen += Open;
+        DialogService.OnClose += Close;
     }
 
     void OnChange(object value)
     {
         UnitSelected = (int)value;
+
+    }
+
+    void DeleteUnit(int unitId)
+    {
+        unitTobeDelete = StateService.TotalUnits.Where(u => u.Id == unitId).First();
+
+        DialogService.Confirm($"Are you sure to delete {unitTobeDelete.Title}? Only half of your fee ({unitTobeDelete.RefoundCoin}) will be refounded?", "Delete Unit", new ConfirmOptions() { OkButtonText = "Ok", CancelButtonText = "No!!" });
+
+
 
     }
     void OnClick(int selectedId)
@@ -75,12 +105,34 @@
         StateService.UseCoin(cost);
         //  MyUnits =  UnitService.GetMyUnit();
         StateService.AddUnit(unit);
-      
+
 
     }
+
+    void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
+    {
+        // console.Log("Dialog opened");
+    }
+
+    void Close(dynamic result)
+    {
+        if (result != null && result && unitTobeDelete != null)
+        {
+            StateService.RefoundCoin(unitTobeDelete.RefoundCoin);
+            StateService.DeleteUnit(unitTobeDelete);
+            UnitService.DeleteUnit(unitTobeDelete);
+        }
+        else
+        {
+            unitTobeDelete = null;
+        }
+        //  console.Log($"Dialog closed");
+    }
+
     public void Dispose()
     {
-
+           DialogService.OnOpen -= Open;
+        DialogService.OnClose -= Close;
         StateService.OnChange -= StateHasChanged;
 
     }

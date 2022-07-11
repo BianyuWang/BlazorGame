@@ -18,7 +18,7 @@ namespace BlazorGame.Shared.Models
 
         public int Attack { get; set; }
 
-        public int ReturnPoint  =>(int)( Cost / 2);
+        public int RefoundCoin  =>(int)( Cost / 2);
 
         public void setHitpoint(int min, int max)
         {

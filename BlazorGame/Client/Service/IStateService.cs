@@ -15,6 +15,6 @@ namespace BlazorGame.Client.Service
       void  RefoundCoin(int refound);
 
         void AddUnit(Unit newUnit);
-     
+        void DeleteUnit(Unit unitToBeDel);
     }
 }
