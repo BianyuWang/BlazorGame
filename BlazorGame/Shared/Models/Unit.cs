@@ -24,7 +24,6 @@ namespace BlazorGame.Shared.Models
         {
             HitPoint = Random.Shared.Next(min, max);
         }
-
         public void setAttacK(int min, int max)
         {
             Attack = Random.Shared.Next(min, max);
