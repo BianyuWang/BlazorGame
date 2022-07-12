@@ -27,21 +27,22 @@ Some ideas came from  <a target="_blank" class="font-weight-bold link-dark" href
 
 <h1>Happy every day!</h1>
 
-@foreach(var item in infos.logs)
+@if (infos != null)
 {
-      int count = item.Messages.Count();
-<div class="alert alert-secondary mt-4">
-    <span class="oi oi-pencil me-2" aria-hidden="true"></span>
-    <strong>@item.DateLog</strong>
+    @foreach (var item in infos.logs)
+    {
+        int count = item.Messages.Count();
+        <div class="alert alert-secondary mt-4">
+            <span class="oi oi-pencil me-2" aria-hidden="true"></span>
+            <strong>@item.DateLog</strong>
 
-    <span class="text-nowrap">
-   @item.Summary
-    </span>
-
-</div>
-
+            <span class="text-nowrap">
+                @item.Summary
+            </span>
+            <ShowLogInfo msgs="@item.Messages"></ShowLogInfo>
+        </div>
+    }
 }
-
 <div class="alert alert-secondary mt-4">
     <span class="oi oi-pencil me-2" aria-hidden="true"></span>
     <strong>XXX,July,2022</strong>
@@ -55,14 +56,11 @@ Some ideas came from  <a target="_blank" class="font-weight-bold link-dark" href
 <SurveyPrompt Title="How is Blazor working for you?" />
 
 @code{
-     
-       
-    private Root infos { get; set; }
-    protected override async Task OnInitializedAsync()
-    {
-          infos =  await Http.GetFromJsonAsync<Root>("txt/LogIndex.json");
-           
-    }
-   
+
+
+    private Root? infos { get; set; }
+
+    protected override async Task OnInitializedAsync() => infos = await Http.GetFromJsonAsync<Root>("txt/LogIndex.json");
+
 
 }

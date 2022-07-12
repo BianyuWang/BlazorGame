@@ -6,24 +6,44 @@
       "Messages": [
         {
           "messageText": "You can choose the hero you want to hire from the drop down list. The cost of each hero is different.",
-          "messageImg": "img/dropdownlist.jpg"
+          "messageImg": "dropdownlist"
         },
         {
-          "messageText": "When you decide to hire a hero,the corresponding cost will will deducted from your bank on the top menu. And a hero will appears in your inventory.(<span style='font:bold'>The attributes of heros are random within a certain range. </span>)",
-          "messageImg": "img/hirehero.jpg"
+          "messageText": "When you decide to hire a hero,the corresponding cost will will deducted from your bank on the top menu. And a hero will appears in your inventory.(<span style='font:bold ; color:red; '>The attributes of heros are random within a certain range. </span>)",
+          "messageImg": "hirehero"
         },
         {
           "messageText": "A toast pops up when you don't have enough lucky coin, and you will no longer be able to click the \"Hire\" button when the lucky coin is below 100.",
-          "messageImg": "img/noenoughcoin.jpg"
+          "messageImg": "noenoughcoin"
         },
         {
           "messageText": "You can choose to let the hero go, but you will only get half of your lucky coin back......",
-          "messageImg": "img/deleteunit.jpg"
+          "messageImg": "deleteunit"
         }
       ]
 
-    }
+    },
+    {
+      "DateLog": "12,July,2022",
+      "Summary": "Put all my logs into JSON file under wwwroot. ",
+      "Messages": [
+        {
+          "messageText": "Read Json file using <strong>Http.GetFromJsonAsync</strong>.",
+          "messageImg": "readjson"
+        },
+        {
+          "messageText": "Ran into a problem, json file updated, can not load information,found the answer finally: disable cache...",
+       
+          "messageImg": "disableCache"
+        },
+        {
+          "messageText": "Now font-end is able to load My thoughts, and put them into data list with pagnation function, NICE! ",
+          "messageImg": "jsonformat"
+        }
+        
+      ]
 
+    }
   ]
 
 

@@ -9,12 +9,10 @@ namespace BlazorGame.Client.Service
         {
             List<LogInfo> t = new List<LogInfo>();
             string rootpath = Path.Combine(Directory.GetCurrentDirectory());
-            var d = AppDomain.CurrentDomain.BaseDirectory;
+            var directory = AppDomain.CurrentDomain.BaseDirectory;
            
-            StreamReader r = new StreamReader($"{d}/txt/LogIndex.json");
-            //string jsonString = r.ReadToEnd();
-            //LogInfo m = JsonConvert.DeserializeObject<LogInfo>(jsonString);
-         //   File.ReadAllText("data.txt");
+            StreamReader r = new StreamReader($"{directory}/txt/LogIndex.json");
+        
             return t;
         }
     }
