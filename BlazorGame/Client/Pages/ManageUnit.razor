@@ -115,9 +115,9 @@
                 ShowNotification(new NotificationMessage { Style = "position: absolute; left: -1000px;top:-50px", Severity = NotificationSeverity.Error, Summary = "Oops :(", Detail = "Not Enough Lucky Cat Coin", Duration = 4000 });
                 return;
             }
-            var unit = UnitService.AddUnit(type);
+            var unit = await UnitService.AddUnit(type);
             StateService.UseCoin((int)type);         
-            StateService.AddUnit(unit);
+             StateService.AddUnit(unit);
         }
     }
 

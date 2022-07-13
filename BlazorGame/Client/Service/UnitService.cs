@@ -5,6 +5,7 @@ namespace BlazorGame.Client.Service
 {
     public class UnitService : IUnitService
     {
+        private HttpClient _HttpClient;
         public static IList<Unit> UnitTypeList => new List<Unit>
         {
         new Unit { Id = 1,Title = UnitType.Knight },
@@ -13,8 +14,9 @@ namespace BlazorGame.Client.Service
         };
         public IList<Unit> MyUnitList { get; set; }
 
-        public UnitService()
+        public UnitService(HttpClient HttpClient)
         {
+            _HttpClient = HttpClient;
             MyUnitList = new List<Unit>();
         }
 
@@ -25,11 +27,11 @@ namespace BlazorGame.Client.Service
                 .First(x => x.Name == unitType);
             return Activator.CreateInstance(type);
         }
-        public Unit AddUnit(UnitType unitType)
+        public async Task<Unit> AddUnit(UnitType unitType)
         {
             object obj = CreateInstanceByClassName(unitType.ToString());
             Unit unit = (Unit)obj;
-
+           var nane= await  _HttpClient.GetStringAsync("api/Name");
             unit.Id = MyUnitList.Count + 1;
             MyUnitList.Add(unit);
             return unit;
