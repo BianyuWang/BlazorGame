@@ -21,7 +21,7 @@
                                     TextProperty="Cost" ValueProperty="Id" AllowFiltering="false"
                                     Change=@(args => OnChange(args))>
                 <Template>
-                    Type: @((context as Unit).Title.ToString()) , Cost : @((context as Unit).Cost)
+                    Type: @((context as Unit).Title) , Cost : @((int)((context as Unit).Title))
                 </Template>
             </RadzenDropDownDataGrid>
         </div>
@@ -37,7 +37,7 @@
         <Template Context="unit">
             <RadzenCard Style="max-width:300px;">
                 <div class="row">
-                    <div class="col-md-7"> <h3 class="h5 unit-title ">@unit.Title.ToUpper()</h3> </div>
+                    <div class="col-md-7"> <h3 class="h5 unit-title ">@unit.Title</h3> </div>
                     <div class="col-md-4" style="text-align: right;">
                         <RadzenButton ButtonStyle="Radzen.ButtonStyle.Danger"
                                   Icon="close" Size="Radzen.ButtonSize.Small"
@@ -108,16 +108,15 @@
         else
         {
             //get cost of selected unit
-            var cost = unitTypeList.Where(u => u.Id == selectedId).First().Cost;
+            var type = unitTypeList.Where(u => u.Id == selectedId).First().Title;
 
-            if (StateService.TotalCoin < cost)
+            if (StateService.TotalCoin < (int)type)
             {
                 ShowNotification(new NotificationMessage { Style = "position: absolute; left: -1000px;top:-50px", Severity = NotificationSeverity.Error, Summary = "Oops :(", Detail = "Not Enough Lucky Cat Coin", Duration = 4000 });
                 return;
             }
-            var unit = UnitService.AddUnit(selectedId);
-            StateService.UseCoin(cost);
-            //  MyUnits =  UnitService.GetMyUnit();
+            var unit = UnitService.AddUnit(type);
+            StateService.UseCoin((int)type);         
             StateService.AddUnit(unit);
         }
     }

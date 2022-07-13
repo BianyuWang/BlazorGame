@@ -16,7 +16,7 @@ namespace BlazorGame.Shared.Models
             setDefense(5, 10);
             setAttacK(15, 20);
             Title = UnitType.Archer;
-            Cost  = 150;
+           
     }
     }
 }

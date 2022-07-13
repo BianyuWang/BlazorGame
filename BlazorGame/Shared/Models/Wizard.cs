@@ -14,8 +14,7 @@ namespace BlazorGame.Shared.Models
         {
             setHitpoint(70, 80);
             setDefense(1, 5);
-            setAttacK(20, 25);
-            Cost = 200;
+            setAttacK(20, 25);         
             Title = UnitType.Wizard;
         }
        

@@ -1,4 +1,5 @@
 ﻿using BlazorGame.Shared.Models;
+using System.Reflection;
 
 namespace BlazorGame.Client.Service
 {
@@ -6,9 +7,9 @@ namespace BlazorGame.Client.Service
     {
         public static IList<Unit> UnitTypeList => new List<Unit>
         {
-        new Unit { Id = 1,Title = UnitType.Knight,Cost =100 },
-        new Unit{ Id =2,Title = UnitType.Archer,Cost = 150},
-        new Unit { Id = 3,Title =UnitType.Wizard,Cost = 200}
+        new Unit { Id = 1,Title = UnitType.Knight },
+        new Unit{ Id =2,Title = UnitType.Archer},
+        new Unit { Id = 3,Title =UnitType.Wizard}
         };
         public IList<Unit> MyUnitList { get; set; }
 
@@ -16,27 +17,19 @@ namespace BlazorGame.Client.Service
         {
             MyUnitList = new List<Unit>();
         }
+
+        private static object CreateInstanceByClassName(string unitType)
+        {
+            var assembly = typeof(Unit).Assembly;         
+            var type = assembly.GetTypes()
+                .First(x => x.Name == unitType);
+            return Activator.CreateInstance(type);
+        }
         public Unit AddUnit(UnitType unitType)
         {
-            Unit unit; 
-            switch (unitType)
-            {
-                case UnitType.Knight: 
-                    unit = new Knight();
-                 
-                    break;
-                case UnitType.Archer:              
-                    unit = new Archer();
-                
-                    break;
-                case UnitType.Wizard:
-                    unit = new Wizard();
-                  
-                    break;
-                default:
-                    unit = new Unit();
-                    break;
-            }
+            object obj = CreateInstanceByClassName(unitType.ToString());
+            Unit unit = (Unit)obj;
+
             unit.Id = MyUnitList.Count + 1;
             MyUnitList.Add(unit);
             return unit;

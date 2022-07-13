@@ -8,9 +8,9 @@ namespace BlazorGame.Shared.Models
 {
     public enum UnitType
     { 
-    Archer,
-    Knight,
-    Wizard
+    Archer = 150,
+    Knight =100,
+    Wizard =200
     }
 
     public class Unit
@@ -19,13 +19,11 @@ namespace BlazorGame.Shared.Models
         public UnitType Title { get; set; }
         public int HitPoint { get; set; }
 
-        public int Cost { get; set; }
-
         public int Defense { get; set; }
 
         public int Attack { get; set; }
 
-        public int RefoundCoin  =>(int)( Cost / 2);
+        public int RefoundCoin  =>(int)( (int)Title / 2);
 
         public void setHitpoint(int min, int max)
         {
