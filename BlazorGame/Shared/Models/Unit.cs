@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace BlazorGame.Shared.Models
 {
+    public enum UnitType
+    { 
+    Archer,
+    Knight,
+    Wizard
+    }
+
     public class Unit
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public UnitType Title { get; set; }
         public int HitPoint { get; set; }
 
         public int Cost { get; set; }
@@ -35,5 +42,6 @@ namespace BlazorGame.Shared.Models
             Defense = Random.Shared.Next(min, max);
         }
 
+        
     }
 }

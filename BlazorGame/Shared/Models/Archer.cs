@@ -15,7 +15,7 @@ namespace BlazorGame.Shared.Models
             setHitpoint(80, 100);
             setDefense(5, 10);
             setAttacK(15, 20);
-            Title = "archer";
+            Title = UnitType.Archer;
             Cost  = 150;
     }
     }

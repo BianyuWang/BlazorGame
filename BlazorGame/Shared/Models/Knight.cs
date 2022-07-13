@@ -15,7 +15,7 @@ namespace BlazorGame.Shared.Models
             setHitpoint(100, 120);
             setDefense(10, 15);
             setAttacK(10, 15);
-            Title  = "knight";
+            Title  = UnitType.Knight;
             Cost  = 100;
         }
     }

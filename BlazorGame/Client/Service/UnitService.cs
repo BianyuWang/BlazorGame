@@ -6,9 +6,9 @@ namespace BlazorGame.Client.Service
     {
         public static IList<Unit> UnitTypeList => new List<Unit>
         {
-        new Unit { Id = 1,Title = "Knight",Cost =100 },
-        new Unit{ Id =2,Title = "Archer",Cost = 150},
-        new Unit { Id = 3,Title ="Wizard",Cost = 200}
+        new Unit { Id = 1,Title = UnitType.Knight,Cost =100 },
+        new Unit{ Id =2,Title = UnitType.Archer,Cost = 150},
+        new Unit { Id = 3,Title =UnitType.Wizard,Cost = 200}
         };
         public IList<Unit> MyUnitList { get; set; }
 
@@ -16,20 +16,21 @@ namespace BlazorGame.Client.Service
         {
             MyUnitList = new List<Unit>();
         }
-        public Unit AddUnit(int unitTypeId)
+        public Unit AddUnit(UnitType unitType)
         {
             Unit unit; 
-            switch (unitTypeId)
+            switch (unitType)
             {
-                case 1: 
+                case UnitType.Knight: 
                     unit = new Knight();
                  
                     break;
-                case 2:              
+                case UnitType.Archer:              
                     unit = new Archer();
                 
                     break;
-                case 3: unit = new Wizard();
+                case UnitType.Wizard:
+                    unit = new Wizard();
                   
                     break;
                 default:

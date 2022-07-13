@@ -16,7 +16,7 @@ namespace BlazorGame.Shared.Models
             setDefense(1, 5);
             setAttacK(20, 25);
             Cost = 200;
-            Title = "wizard";
+            Title = UnitType.Wizard;
         }
        
     }

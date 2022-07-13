@@ -7,7 +7,7 @@ namespace BlazorGame.Client.Service
        static  IList<Unit> UnitTypeList { get; set; }
         IList<Unit> MyUnitList { get; set; }
 
-        Unit AddUnit(int unitId);
+        Unit AddUnit(UnitType unitType);
 
         void DeleteUnit(Unit unit);
 

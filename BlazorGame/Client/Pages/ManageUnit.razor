@@ -18,10 +18,10 @@
         <div class="col-7">
             <RadzenDropDownDataGrid TValue="int" AllowClear="true"
                                     Data=@(unitTypeList) Style="width: 90%" AllowColumnResize="true"
-                                    TextProperty="Title" ValueProperty="Id" AllowFiltering="false"
+                                    TextProperty="Cost" ValueProperty="Id" AllowFiltering="false"
                                     Change=@(args => OnChange(args))>
                 <Template>
-                    Type: @((context as Unit).Title) , Cost : @((context as Unit).Cost)
+                    Type: @((context as Unit).Title.ToString()) , Cost : @((context as Unit).Cost)
                 </Template>
             </RadzenDropDownDataGrid>
         </div>
