@@ -18,7 +18,7 @@
         <div class="col-7">
             <RadzenDropDownDataGrid TValue="int" AllowClear="true"
                                     Data=@(unitTypeList) Style="width: 90%" AllowColumnResize="true"
-                                    TextProperty="Cost" ValueProperty="Id" AllowFiltering="false"
+                                    TextProperty="Title" ValueProperty="Id" AllowFiltering="false"
                                     Change=@(args => OnChange(args))>
                 <Template>
                     Type: @((context as Unit).Title) , Cost : @((int)((context as Unit).Title))

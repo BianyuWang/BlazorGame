@@ -33,17 +33,30 @@
         },
         {
           "messageText": "Ran into a problem, json file updated, can not load information,found the answer finally: disable cache...",
-       
+
           "messageImg": "disableCache"
         },
         {
           "messageText": "Now font-end is able to load My thoughts, and put them into data list with pagnation function, NICE! ",
           "messageImg": "jsonformat"
         }
-        
+
+      ]
+
+    },
+    {
+      "DateLog": "13,July,2022",
+      "Summary": "It's sunny outside and it's a busy day...",
+      "Messages": [
+        {
+          "messageText": "using Enum class, and CreateIstanceByClassName, :),need to change the habit of writing code in a hurry without thinking.",
+          "messageImg": "enumandcreatebyclassname"
+        }
+
       ]
 
     }
+
   ]
 
 
