@@ -11,46 +11,95 @@
     <h3>Be patient... </h3>
 }
 
-<PageTitle>Weather forecast</PageTitle>
-
-<h1>Weather forecast</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
-
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
+@if (StateService.TotalUnits.Count != 0)
+{<div class = "row">
+     <div class="col-lg-6 col-md-4 col-sm-12">
+        <RadzenCard >
+               <h3 class="h5">Your Hero</h3>
+    <RadzenDataGrid AllowFiltering="false" RowClick="@RowSelect" AllowPaging="false" 
+                AllowSorting="true" Data="@StateService.TotalUnits" TItem="Unit" ColumnWidth="50px"
+                SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedUnits   >
+        <Columns>
+            <RadzenDataGridColumn TItem="Unit" Property="Photo" Title="Hero" Sortable="false" Filterable="false">
+                <Template Context="data">
+                    <RadzenImage Path="@($"img/{data.Title}.jpg")" style="width: 40px; height: 40px; border-radius: 8px; margin-right: 8px;" />
+                    @data.Name
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Unit" Property="HitPoint" Title="HP" />
+            <RadzenDataGridColumn TItem="Unit" Property="Attack" Title="Attack" />
+            <RadzenDataGridColumn TItem="Unit" Property="Defense" Title="Defense" />         
+        </Columns>
+    </RadzenDataGrid>
+    </RadzenCard>
+    </div>
+    <div class="col-lg-6 col-md-4 col-sm-12">
+        <RadzenCard >
+              <h3 class="h5">Com - Monsters (for now, just the user's hero, will update soon)</h3>
+    <RadzenDataGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="4"
+                AllowSorting="true" Data="@StateService.TotalUnits" TItem="Unit" ColumnWidth="50px"
+                SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedUnits>
+        <Columns>
+            <RadzenDataGridColumn TItem="Unit" Property="Photo" Title="Hero" Sortable="false" Filterable="false">
+                <Template Context="data">
+                    <RadzenImage Path="@($"img/{data.Title}.jpg")" style="width: 40px; height: 40px; border-radius: 8px; margin-right: 8px;" />
+                    @data.Name
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Unit" Property="HitPoint" Title="HP" />
+            <RadzenDataGridColumn TItem="Unit" Property="Attack" Title="Attack" />
+            <RadzenDataGridColumn TItem="Unit" Property="Defense" Title="Defense" />         
+        </Columns>
+    </RadzenDataGrid>
+    </RadzenCard>
+    </div>
+    </div>
+    @if (selectedUnits != null)
+    {
+        <div class ="row my-4 ">
+            <div class ="col-lg-1 col-md-4 col-sm-12" >
+                <RadzenImage Path="@($"img/{selectedUnits[0].Title}.jpg")" style="width: 80px; height: 80px; border-radius: 8px; margin-right: 8px;" />
+             HP :   @selectedUnits[0].HitPoint 
+            </div>
+            <div class ="col-lg-10 col-md-4 col-sm-12" >
+                <RadzenCard>
+                    <h4 class="mb-4">Strength Value</h4>
+                    <RadzenSlider Disabled="true" @bind-Value="@value" TValue="int" Min="0" Max="100" class="w-100" />
+                </RadzenCard>
+            </div>
+            <div class ="col-lg-1 col-md-4 col-sm-12" > <RadzenImage Path="@($"img/wizard.jpg")" style="width: 80px; height: 80px; border-radius: 8px; margin-right: 8px;" />
+          HP: 80
+            </div>
+        </div>
+    }
 }
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+
 
 @code {
     private WeatherForecast[]? forecasts;
-
+    private   IList<Unit> selectedUnits { get; set; }
+    private int value = 50;
     protected override async Task OnInitializedAsync()
     {
         forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        StateService.OnChange += StateHasChanged;
+
+    }
+
+
+
+    void RowSelect(DataGridRowMouseEventArgs<Unit>  RowSelected)
+    {
+        var num = ((double)RowSelected.Data.HitPoint / (RowSelected.Data.HitPoint + 80)) * 100;
+         value = Convert.ToInt32(Math.Round(num, 0));
+
+          
+    }
+    
+    public void Dispose()
+    {
+       
+        StateService.OnChange -= StateHasChanged;
+
     }
 }
