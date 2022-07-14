@@ -8,11 +8,11 @@ namespace BlazorGame.Client.Service
 
         bool DisableBtnClick { get; set; }
         string CoinCss { get; set; }
-
-        
+        bool IsMonsterGenerated { get; set; }
+        bool IsBattleBegin { get; set; }
 
         List<Unit> TotalUnits { get; set; }
-       
+        List<Unit> TotalMonsters { get; set; }
         event Action OnChange; 
 
       void  UseCoin(int cost);

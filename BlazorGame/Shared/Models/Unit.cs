@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace BlazorGame.Shared.Models
 {
     public enum UnitType
-    { 
-    Archer = 150,
-    Knight =100,
+    {
+        Knight = 100,
+        Archer = 150, 
     Wizard =200
     }
 

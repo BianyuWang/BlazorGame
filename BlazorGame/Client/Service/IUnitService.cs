@@ -5,8 +5,9 @@ namespace BlazorGame.Client.Service
   public  interface  IUnitService
     {
        static  IList<Unit> UnitTypeList { get; set; }
-        IList<Unit> MyUnitList { get; set; }
-
+        List<Unit> MyUnitList { get; set; }
+        List<Unit> ComMonster { get; set; }
+        Task<List<Unit>> GeneraterMosterList();
         Task<Unit> AddUnit(UnitType unitType);
 
         void DeleteUnit(Unit unit);
@@ -15,7 +16,7 @@ namespace BlazorGame.Client.Service
 
         IList<Unit> GetUnitType();
 
-        IList<Unit> GetMyUnit();
+        List<Unit> GetMyUnit();
 
     }
 }

@@ -6,10 +6,14 @@ namespace BlazorGame.Client.Service
     public class StateService : IStateService
     {
         public int TotalCoin { get; set; } = 1000;
-        
+
+        public bool IsMonsterGenerated { get; set; } = false;
+
         public List<Unit> TotalUnits { get; set; } = new List<Unit>();
         public string CoinCss { get; set; } = "sufficient";
         public bool DisableBtnClick { get; set; } = false;
+        public bool IsBattleBegin { get; set; } = false;
+        public List<Unit> TotalMonsters { get; set; } = new List<Unit>();
 
         public event Action OnChange;
 
