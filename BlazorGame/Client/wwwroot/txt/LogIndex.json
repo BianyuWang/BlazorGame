@@ -65,6 +65,24 @@
 
       ]
 
+    },
+    {
+      "DateLog": "14,July,2022",
+      "Summary": "It's the day before I go on vacation, and I haven't even started preparing my luggage...",
+      "Messages": [
+        {
+          "messageText": "Add a Busy Me to show a better user experience",
+          "messageImg": "busyme"
+        },
+
+        {
+          "messageText": "Completed the simple battle field UI design.Has not started to allow the computer to build his army, because I am afraid that I am too weak to be defeated!",
+          "messageImg": "tournamentfield"
+        }
+
+
+      ]
+
     }
 
   ]
