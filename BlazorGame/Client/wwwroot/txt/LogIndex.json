@@ -78,10 +78,19 @@
         {
           "messageText": "Completed the simple battle field UI design.Has not started to allow the computer to build his army, because I am afraid that I am too weak to be defeated!",
           "messageImg": "tournamentfield"
+        },
+        {
+          "messageText": "We can automatically generate monster, first hire a hero of yours, and then go to the battle field !",
+          "messageImg": "monsters"
         }
 
-
       ]
+
+    },
+    {
+      "DateLog": "15,July,2022",
+      "Summary": "Vacation mode!!!"
+
 
     }
 

@@ -31,7 +31,7 @@ Some ideas came from  <a target="_blank" class="font-weight-bold link-dark" href
 {
     @foreach (LogInfo item in infos.logs.Reverse<LogInfo>())
     {
-        int count = item.Messages.Count();
+       
         <div class="alert alert-secondary mt-4">
             <span class="oi oi-pencil me-2" aria-hidden="true"></span>
             <strong>@item.DateLog</strong>
@@ -39,7 +39,8 @@ Some ideas came from  <a target="_blank" class="font-weight-bold link-dark" href
             <span class="text-nowrap">
                 @item.Summary
             </span>
-            <ShowLogInfo msgs="@item.Messages"></ShowLogInfo>
+           @if(item.Messages!=null){
+            <ShowLogInfo msgs="@item.Messages"></ShowLogInfo>}
         </div>
     }
 }
