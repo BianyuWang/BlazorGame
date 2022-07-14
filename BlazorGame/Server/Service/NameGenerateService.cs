@@ -15,9 +15,10 @@ namespace BlazorGame.Server.Service
        
         }
 
+        [Obsolete]
         public async Task<string> GetARadomName()
         {
-            string name=null;
+            string? name =null;
 
             var options = new RestClientOptions(_Configuration["APIAddr"])
             {
@@ -30,15 +31,12 @@ namespace BlazorGame.Server.Service
             var response = await client.ExecuteGetAsync(request);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                
-
-                dynamic details = JsonConvert.DeserializeObject<ExpandoObject>(response.Content, new ExpandoObjectConverter());
-             
-                name = ((IEnumerable<dynamic>)details.data).First().name.firstname.name;
-                         
-             
+                dynamic details = JsonConvert.DeserializeObject<ExpandoObject>(response.Content, new ExpandoObjectConverter());            
+                name = ((IEnumerable<dynamic>)details.data).First().name.firstname.name;                                     
             }
+#pragma warning disable CS8603 // Possible null reference return.
             return name;
+#pragma warning restore CS8603 // Possible null reference return.
         }
     }
 }

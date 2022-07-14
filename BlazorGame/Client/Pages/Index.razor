@@ -57,10 +57,7 @@ Some ideas came from  <a target="_blank" class="font-weight-bold link-dark" href
 
 @code{
 
-
     private Root? infos { get; set; }
-
     protected override async Task OnInitializedAsync() => infos = await Http.GetFromJsonAsync<Root>("txt/LogIndex.json");
-
 
 }

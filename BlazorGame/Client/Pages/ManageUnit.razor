@@ -87,6 +87,20 @@
 
     }
 
+    async Task BusyDialog()
+    {
+        await DialogService.OpenAsync("", ds =>
+    @<div>
+        <div class="row">
+            <div class="col text-center p-5">
+                <RadzenImage Path="img/buzy.gif" Style="display: block; width: 200px; margin-bottom: 40px;" />
+               @* <b>Loading, please wait...</b>*@
+            </div>
+        </div>
+    </div>
+    , new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
+    }
+
     void DeleteUnit(int unitId)
     {
         unitTobeDelete = StateService.TotalUnits.Where(u => u.Id == unitId).First();
@@ -115,9 +129,12 @@
                 ShowNotification(new NotificationMessage { Style = "position: absolute; left: -1000px;top:-50px", Severity = NotificationSeverity.Error, Summary = "Oops :(", Detail = "Not Enough Lucky Cat Coin", Duration = 4000 });
                 return;
             }
+            BusyDialog();
+            await Task.Delay(1);
             var unit = await UnitService.AddUnit(type);
             StateService.UseCoin((int)type);         
-             StateService.AddUnit(unit);
+            StateService.AddUnit(unit);
+            DialogService.Close();
         }
     }
 
