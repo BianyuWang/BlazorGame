@@ -31,7 +31,7 @@ namespace BlazorGame.Client.Service
         {
             object obj = CreateInstanceByClassName(unitType.ToString());
             Unit unit = (Unit)obj;
-           var nane= await  _HttpClient.GetStringAsync("api/Name");
+            unit.Name= await  _HttpClient.GetStringAsync("api/Name");
             unit.Id = MyUnitList.Count + 1;
             MyUnitList.Add(unit);
             return unit;
@@ -58,5 +58,7 @@ namespace BlazorGame.Client.Service
         {
            return MyUnitList;
         }
+
+       
     }
 }

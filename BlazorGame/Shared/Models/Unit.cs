@@ -17,6 +17,8 @@ namespace BlazorGame.Shared.Models
     {
         public int Id { get; set; }
         public UnitType Title { get; set; }
+
+        public string Name { get; set; }
         public int HitPoint { get; set; }
 
         public int Defense { get; set; }

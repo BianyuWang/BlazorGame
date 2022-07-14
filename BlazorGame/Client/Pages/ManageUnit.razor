@@ -26,7 +26,7 @@
             </RadzenDropDownDataGrid>
         </div>
         <div class="col-5">  
-            <RadzenButton Disabled="@StateService.DisableBtnClick" Icon="add_shopping_cart" Click=@(args => OnClick(@UnitSelected)) ButtonStyle="ButtonStyle.Success" />Hire Hero</div>
+            <RadzenButton Disabled="@StateService.DisableBtnClick" Text="Hire Hero" Icon="add_shopping_cart" Click=@(args => OnClick(@UnitSelected)) ButtonStyle="ButtonStyle.Success" /></div>
     </div>
 
 </RadzenCard>
@@ -37,8 +37,8 @@
         <Template Context="unit">
             <RadzenCard Style="max-width:300px;">
                 <div class="row">
-                    <div class="col-md-7"> <h3 class="h5 unit-title ">@unit.Title</h3> </div>
-                    <div class="col-md-4" style="text-align: right;">
+                    <div class="col-md-11 row"> <h3 class="h5 unit-title ">@unit.Title -- @unit.Name</h3></div>
+                    <div class="col-md-1" style="text-align: right;">
                         <RadzenButton ButtonStyle="Radzen.ButtonStyle.Danger"
                                   Icon="close" Size="Radzen.ButtonSize.Small"
                                   Click="@(arg=>DeleteUnit(unit.Id))">

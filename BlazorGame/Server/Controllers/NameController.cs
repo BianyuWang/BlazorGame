@@ -18,8 +18,10 @@ namespace BlazorGame.Server.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
-        var t = await    _NameGenerateService.GetARadomName();
-            return Ok("ok");
+        var name = await  _NameGenerateService.GetARadomName();
+            if(name!=null)
+            return Ok(name);
+            return BadRequest();
         }
     }
 }

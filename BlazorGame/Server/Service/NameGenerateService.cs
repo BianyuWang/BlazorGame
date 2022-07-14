@@ -1,5 +1,8 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
+using Newtonsoft.Json.Linq;
+using System.Dynamic;
+using Newtonsoft.Json.Converters;
 
 namespace BlazorGame.Server.Service
 {
@@ -14,6 +17,7 @@ namespace BlazorGame.Server.Service
 
         public async Task<string> GetARadomName()
         {
+            string name=null;
 
             var options = new RestClientOptions(_Configuration["APIAddr"])
             {
@@ -26,12 +30,15 @@ namespace BlazorGame.Server.Service
             var response = await client.ExecuteGetAsync(request);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var name = response.Content;
-                dynamic details = JsonConvert.DeserializeObject(response.Content);
+                
 
-
+                dynamic details = JsonConvert.DeserializeObject<ExpandoObject>(response.Content, new ExpandoObjectConverter());
+              
+                name = ((IEnumerable<dynamic>)details.data).First().name.firstname.name;
+                         
+             
             }
-            return  "ok";
+            return name;
         }
     }
 }
