@@ -51,7 +51,17 @@
         {
           "messageText": "using Enum class, and CreateIstanceByClassName, :),need to change the habit of writing code in a hurry without thinking.",
           "messageImg": "enumandcreatebyclassname"
+        },
+
+        {
+          "messageText": "We can generate a random name for our hero, thanks to <a href =\"https://parser.name/api/\" target =\"_blank\"> Name Parser API</a>. ",
+          "messageImg": "generatename"
+        },
+        {
+          "messageText": "I used dynamic json here because I only wanted to get a name.. what a lazy ME, ha-ha",
+          "messageImg": "dynamicjson"
         }
+
 
       ]
 

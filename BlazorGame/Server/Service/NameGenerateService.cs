@@ -26,14 +26,14 @@ namespace BlazorGame.Server.Service
             };
             var client = new RestClient(options);
 
-            var request = new RestRequest("?api_key=17a5ab11a134d7598f7280ef71a752f4&endpoint=generate&country_code=ca&results=1");
+            var request = new RestRequest($"?api_key={_Configuration["api_key"]}&endpoint={_Configuration["endpoint"]}&country_code={_Configuration["country_code"]}&results={_Configuration["results"]}");
             var response = await client.ExecuteGetAsync(request);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 
 
                 dynamic details = JsonConvert.DeserializeObject<ExpandoObject>(response.Content, new ExpandoObjectConverter());
-              
+             
                 name = ((IEnumerable<dynamic>)details.data).First().name.firstname.name;
                          
              
