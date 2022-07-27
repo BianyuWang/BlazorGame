@@ -10,7 +10,7 @@ namespace BlazorGame.Shared.Models
     {
         Knight = 100,
         Archer = 150, 
-    Wizard =200
+        Wizard =200
     }
 
     public class Unit

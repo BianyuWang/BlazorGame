@@ -4,14 +4,7 @@
 @inject IStateService StateService
 @inject IUnitService UniteService
 @inject Radzen.DialogService DialogService
-
-@if (StateService.DisableBtnClick)
-{
-
-    <h1>Hey！ Hey！</h1>
-    <h2>Fight =! Fetch</h2>
-    <h3>Be patient... </h3>
-}
+@inject TooltipService tooltipService
 
 @if (StateService.TotalUnits.Count != 0)
 {
@@ -38,18 +31,19 @@
         </div>
         <div class="col-lg-6 col-md-4 col-sm-12">
             <RadzenCard>
-                <div class="row">
-                    <div class= "col-3"> <h3 class="h5">Com - Monsters</h3></div>
-                    <div class = "col-6" > 
+               
+                    <div > <h3 class="h5">STEP 1 : Generate Com-Monsters</h3></div>
+                     <div class="row">
+                    <div class = "col-9" > 
                         
                              <RadzenButton Image="img/Com.jpg" Click ="@GenerateMoster" ButtonStyle="ButtonStyle.Secondary">
                             @if (StateService.TotalMonsters.Count() > 0)
                             {
-                                <span class="rz-button-text">Re-Summon Com-Monsters</span>
+                                <span class="rz-button-text">Re-generate Com-Monsters</span>
                             }
                             else
                             {
-                                  <span class="rz-button-text">Summon Com-Monsters</span>
+                                  <span class="rz-button-text">Generate Com-Monsters</span>
                             }
                             
                     </RadzenButton>
@@ -59,7 +53,7 @@
                        <div class = "col-3" > 
                            @if (StateService.TotalMonsters.Count() > 0)
                             {
-                             <RadzenButton Click ="@ClearMosters" ButtonStyle="ButtonStyle.Danger">
+                             <RadzenButton Click ="@ClearMosters" ButtonStyle="ButtonStyle.Danger" >
                             
                                 <span class="rz-button-text">
                                     Clear</span>
@@ -80,13 +74,67 @@
                         <Columns>
                             <RadzenDataGridColumn TItem="Unit" Property="Photo" Title="Hero" Sortable="false" Filterable="false">
                                 <Template Context="data">
-                                    <RadzenImage Path="@($"img/monster{data.Title}.jpg")" style="width: 40px; height: 40px; border-radius: 8px; margin-right: 8px;" />
-                                    @data.Name - @data.Title
+                                 
+                                       @{switch (StateService.gameLevel)
+                                    {
+                                         case(GameLevel.Intermediate):
+
+                                              <RadzenImage Path="@($"img/monster{data.Title}.jpg")" style="width: 40px; height: 40px; border-radius: 8px; margin-right: 8px;" />
+                                                <span>XX-@data.Title</span>
+                                            break;
+
+                                    case(GameLevel.Easy):
+                                          <RadzenImage Path="@($"img/monster{data.Title}.jpg")" style="width: 40px; height: 40px; border-radius: 8px; margin-right: 8px;" />
+                                            <span>@data.Name-@data.Title</span>
+                                    break;
+
+                                    default:
+                                            <RadzenImage Path="@($"img/question.png")" style="width: 40px; height: 40px; border-radius: 8px; margin-right: 8px;" />
+                                            <span>XX - XX</span>
+                                            break;
+
+                                    }
+                                    }
+                                      
                                 </Template>
                             </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="Unit" Property="HitPoint" Title="HP" />
-                            <RadzenDataGridColumn TItem="Unit" Property="Attack" Title="Attack" />
-                            <RadzenDataGridColumn TItem="Unit" Property="Defense" Title="Defense" />
+                            <RadzenDataGridColumn TItem="Unit" Property="HitPoint" Title="HP" >
+                                <Template  Context="data">
+                                @if (StateService.gameLevel!=GameLevel.Easy)
+                                {
+                                    <span>??</span>
+                                }
+                                else
+                                {
+                                <span>@data.HitPoint</span>
+                                }
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Unit" Property="Attack" Title="Attack">
+                                  <Template  Context="data">
+                                @if (StateService.gameLevel !=GameLevel.Easy)
+                                {
+                                  <span>??</span>
+                                }  
+                                  else
+                                {
+                                <span>@data.Attack</span>
+                                }
+                                 </Template>
+
+                                  </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Unit" Property="Defense" Title="Defense" >
+                                  <Template  Context="data">
+                                    @if (StateService.gameLevel !=GameLevel.Easy)
+                                {
+                                  <span>??</span>
+                                }
+                                  else
+                                {
+                                <span>@data.Defense</span>
+                                }
+                                </Template>
+                            </RadzenDataGridColumn>
                         </Columns>
                     </RadzenDataGrid>
                 }
@@ -96,7 +144,43 @@
         </div>
     </div>
 
+    @if (StateService.IsMonsterGenerated)
+    {
 
+        <div class="row flex-row-reverse">
+
+            <div class="col-lg-6 col-md-4 col-sm-12  ">
+                <RadzenCard >
+                    <h3 class="h5">STEP 2 ：Choose difficulty</h3>
+                    <RadzenRadioButtonList @bind-Value=@gameLevel TValue="GameLevel" Disabled="@StateService.DisableLevel"  Change=@((args) => OnLevelChange(args))>
+                        <Items>
+                            <RadzenRadioButtonListItem Text="Easy"  Value="GameLevel.Easy" Style="color: blue; margin-left: 8px; vertical-align: middle;"  />
+                            <RadzenRadioButtonListItem Text="Intermediate" Value="GameLevel.Intermediate" Style="color: green; margin-left: 8px; vertical-align: middle;"  />
+                            <RadzenRadioButtonListItem Text="Hard" Value="GameLevel.Hard" Style="color: orange; margin-left: 8px; vertical-align: middle;"  />
+                            <RadzenRadioButtonListItem Text="Expert" Value="GameLevel.Expert" Style="color: red; margin-left: 8px; vertical-align: middle;"  />
+                        </Items>
+                    </RadzenRadioButtonList>        
+                      <RadzenCard Class="mt-4">
+               <p>
+                   detail : @StateService.LevelExplanation.ElementAt((int)gameLevel)
+
+               </p>
+            </RadzenCard>
+
+                </RadzenCard>
+            </div>
+        </div>
+          <div class="row flex-row-reverse">
+
+            <div class="col-lg-6 col-md-4 col-sm-12  ">
+                <RadzenCard >
+                    <h3 class="h5">STEP 3 ： Let's Fight some monsters</h3>
+                   <RadzenButton  Text="FIGHT" Icon="warning_amber" ButtonStyle="ButtonStyle.Warning" />
+                </RadzenCard>
+            </div>
+        </div>
+
+    }
 
     @if (selectedUnits != null)
     {
@@ -124,6 +208,7 @@
     private WeatherForecast[]? forecasts;
     private IList<Unit> selectedUnits { get; set; }
     private int value = 50;
+    private GameLevel gameLevel;
     protected override async Task OnInitializedAsync()
     {
         forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
@@ -140,6 +225,7 @@
         await Task.Delay(1);
         StateService.TotalMonsters  = await UniteService.GeneraterMosterList();
         StateService.IsMonsterGenerated = true;
+       StateService.DisableLevel = !StateService.IsMonsterGenerated;
         DialogService.Close();
     }
 
@@ -147,16 +233,23 @@
     {
         await DialogService.OpenAsync("", ds =>
     @<div>
-        <div class="row">
-            <div class="col text-center p-5">
-                <RadzenImage Path="img/buzy.gif" Style="display: block; width: 200px; margin-bottom: 40px;" />
-               @* <b>Loading, please wait...</b>*@
-            </div>
-        </div>
+                        <div class="row">
+                            <div class="col text-center p-5">
+                                <RadzenImage Path="img/buzy.gif" Style="display: block; width: 200px; margin-bottom: 40px;" />
+                               @* <b>Loading, please wait...</b>*@
+                            </div>
+                        </div>
     </div>
     , new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
     }
 
+    void OnLevelChange(GameLevel level)
+    {
+
+        StateService.gameLevel = level;
+
+
+    }
 
     void RowSelect(DataGridRowMouseEventArgs<Unit> RowSelected)
     {
@@ -165,10 +258,14 @@
 
 
     }
+
+    void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => tooltipService.Open(elementReference, "Some content", options);
+
     public void ClearMosters()
     {
         StateService.TotalMonsters.Clear();
         StateService.IsMonsterGenerated = false;
+        StateService.DisableLevel = !StateService.IsMonsterGenerated;
     }
     public void Dispose()
     {
