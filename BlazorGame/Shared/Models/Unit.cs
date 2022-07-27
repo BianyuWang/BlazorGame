@@ -18,6 +18,7 @@ namespace BlazorGame.Shared.Models
         public int Id { get; set; }
         public UnitType Title { get; set; }
 
+        public bool isSurvived => true;
         public string? Name { get; set; }
         public int HitPoint { get; set; }
 
@@ -25,7 +26,7 @@ namespace BlazorGame.Shared.Models
 
         public int Attack { get; set; }
 
-        public int RefoundCoin  =>(int)( (int)Title / 2);
+        public int RefoundCoin  =>((int)Title / 2);
 
         public void setHitpoint(int min, int max)
         {

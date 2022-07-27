@@ -175,32 +175,14 @@
             <div class="col-lg-6 col-md-4 col-sm-12  ">
                 <RadzenCard >
                     <h3 class="h5">STEP 3 ： Let's Fight some monsters</h3>
-                   <RadzenButton  Text="FIGHT" Icon="warning_amber" ButtonStyle="ButtonStyle.Warning" />
+                   <RadzenButton  Text="FIGHT" Icon="warning_amber" ButtonStyle="ButtonStyle.Warning" Click="BeginBattle" />
                 </RadzenCard>
             </div>
         </div>
 
     }
 
-    @if (selectedUnits != null)
-    {
-        <div class="row my-4 ">
-            <div class="col-lg-1 col-md-4 col-sm-12">
-                <RadzenImage Path="@($"img/{selectedUnits[0].Title}.jpg")" style="width: 80px; height: 80px; border-radius: 8px; margin-right: 8px;" />
-                HP :   @selectedUnits[0].HitPoint
-            </div>
-            <div class="col-lg-10 col-md-4 col-sm-12">
-                <RadzenCard>
-                    <h4 class="mb-4">Strength Value</h4>
-                    <RadzenSlider Disabled="true" @bind-Value="@value" TValue="int" Min="0" Max="100" class="w-100" />
-                </RadzenCard>
-            </div>
-            <div class="col-lg-1 col-md-4 col-sm-12">
-                <RadzenImage Path="@($"img/wizard.jpg")" style="width: 80px; height: 80px; border-radius: 8px; margin-right: 8px;" />
-                HP: 80
-            </div>
-        </div>
-    }
+ 
 }
 
 
@@ -211,22 +193,24 @@
     private GameLevel gameLevel;
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+      //  forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
         StateService.OnChange += StateHasChanged;
-
+         DialogService.OnOpen += Open;
+        DialogService.OnClose += Close;
     }
 
     async Task GenerateMoster()
     {
-        if (StateService.TotalMonsters.Count() > 1)
-        StateService.TotalMonsters.Clear();
+        if (StateService.DisableBtnClick)
+        {
+           await ConfirmGenerate();
+        }
+        else
+        { 
+             DialogService.Confirm($"You can hire more heroes, are you going to give up hiring before the enemy comes?", "Generate Monsters", new ConfirmOptions() { Style="width: 700px;", OkButtonText = "Generate", CancelButtonText = "Hire More Hero" });
         
-        BusyDialog();
-        await Task.Delay(1);
-        StateService.TotalMonsters  = await UniteService.GeneraterMosterList();
-        StateService.IsMonsterGenerated = true;
-       StateService.DisableLevel = !StateService.IsMonsterGenerated;
-        DialogService.Close();
+        }
+
     }
 
   async Task BusyDialog()
@@ -239,16 +223,13 @@
                                @* <b>Loading, please wait...</b>*@
                             </div>
                         </div>
-    </div>
+        </div>
     , new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
     }
 
     void OnLevelChange(GameLevel level)
     {
-
         StateService.gameLevel = level;
-
-
     }
 
     void RowSelect(DataGridRowMouseEventArgs<Unit> RowSelected)
@@ -256,10 +237,9 @@
         var num = ((double)RowSelected.Data.HitPoint / (RowSelected.Data.HitPoint + 80)) * 100;
         value = Convert.ToInt32(Math.Round(num, 0));
 
-
     }
 
-    void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => tooltipService.Open(elementReference, "Some content", options);
+    //void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => tooltipService.Open(elementReference, "Some content", options);
 
     public void ClearMosters()
     {
@@ -273,6 +253,50 @@
         StateService.OnChange -= StateHasChanged;
 
     }
+    public async void Close (dynamic result)
+    {
+        if (result != null && result)
+        {
+
+            await ConfirmGenerate();
+        }
+        else
+        {
+            // unitTobeDelete = null;
+        }
+
+    }
+
+    void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
+    {
+
+    }
+
+   async Task BeginBattle(){
+
+ await DialogService.OpenAsync<Battle>($"Battle Begin",
+ new Dictionary<string, object>() { { "Level", gameLevel } },
+ new DialogOptions() { Width= "1800px",  Height = "900px", Resizable = false, Draggable = true,ShowClose =true });
+    }
+
+
+    public async Task ConfirmGenerate()
+    { 
+
+        if (StateService.TotalMonsters.Count() > 1)
+            StateService.TotalMonsters.Clear();
+
+        BusyDialog();
+        await Task.Delay(1);
+        StateService.TotalMonsters = await UniteService.GeneraterMosterList();
+        StateService.IsMonsterGenerated = true;
+        StateService.DisableLevel = !StateService.IsMonsterGenerated;
+        DialogService.Close();
+        StateHasChanged();
+    }
+
+
+
 }
 
 

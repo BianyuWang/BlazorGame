@@ -1,0 +1,128 @@
+﻿@inject IStateService stateService
+@inject IJSRuntime JSRuntime
+<div class="row">
+    <div class="col-2">
+          <RadzenPanel AllowCollapse="true" Style="margin: 5px auto;">
+        <HeaderTemplate>
+            <h5 class="m-0 d-flex align-items-center">
+                <RadzenIcon Icon="account_box" Class="mr-1" /><b>My Heros</b>
+            </h5>
+        </HeaderTemplate>
+        <ChildContent>
+                   <RadzenCard>
+                <h3 class="h5">Your Hero</h3>
+                <RadzenDataGrid AllowFiltering="false" RowClick="@RowSelect"  AllowPaging="true" PageSize=3
+                            AllowSorting="false" Data="@stateService.TotalUnits" TItem="Unit" ColumnWidth="50px"
+                            SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedUnits>
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Unit" Property="Photo" Title="Hero" Sortable="false" Filterable="false">
+                            <Template Context="hero">
+                               <RadzenCard >                                               
+                            <div class="d-flex flex-row align-items-center">
+                                <RadzenImage Path="@($"img/{hero.Title}.jpg")" Class="rounded-circle float-left mr-3" Style="width: 50px; height: 50px;" />
+                                <div>
+                                   
+                                    <div> HP : <RadzenBadge BadgeStyle="BadgeStyle.Success" Text=@($"{hero.HitPoint}") /> </div>
+                                    <div> ATT: <RadzenBadge BadgeStyle="BadgeStyle.Danger" Text=@($"{hero.Attack}") Class="mr-1" /></div>
+                                    <div> DEF: <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text=@($"{hero.Defense}") Class="mr-1" /></div>
+                                </div>
+                            </div>
+                        </RadzenCard>
+                            </Template>
+                        </RadzenDataGridColumn>
+                  
+                    </Columns>
+                </RadzenDataGrid>
+            </RadzenCard>
+        </ChildContent>
+        <SummaryTemplate>
+            <RadzenCard class="mt-3">
+                <b>@stateService.TotalUnits.Count() Heros Survived</b>
+            </RadzenCard>
+        </SummaryTemplate>
+    </RadzenPanel>
+    </div>
+<div class="col-8">
+       @if (selectedUnits != null)
+    {
+        <div class="row my-4 ">
+            <div class="col-lg-1 col-md-4 col-sm-12">
+                <RadzenImage Path="@($"img/{selectedUnits[0].Title}.jpg")" style="width: 80px; height: 80px; border-radius: 8px; margin-right: 8px;" />
+                HP :   @selectedUnits[0].HitPoint
+            </div>
+            <div class="col-lg-10 col-md-4 col-sm-12">
+                <RadzenCard>
+                    <h4 class="mb-4">Strength Value</h4>
+                    <RadzenSlider Disabled="true" @bind-Value="@value" TValue="int" Min="0" Max="100" class="w-100" />
+                </RadzenCard>
+            </div>
+            <div class="col-lg-1 col-md-4 col-sm-12">
+                <RadzenImage Path="@($"img/wizard.jpg")" style="width: 80px; height: 80px; border-radius: 8px; margin-right: 8px;" />
+                HP: 80
+            </div>
+        </div>
+    }
+      <EventConsole @ref=@console />
+</div>
+
+
+<div class="col-2">
+        <RadzenPanel AllowCollapse="true" Style="margin: 5px auto;">
+        <HeaderTemplate>
+            <h5 class="m-0 d-flex align-items-center">
+                <RadzenIcon Icon="account_box" Class="mr-1" /><b>Com-monsters</b>
+            </h5>
+        </HeaderTemplate>
+        <ChildContent>
+            <RadzenCard>
+                <RadzenDataList PageSize="3" WrapItems="true" AllowPaging="true" 
+                                Data="@stateService.TotalMonsters" TItem="Unit" >
+                    <Template Context="enemy">
+                        <RadzenCard >                                               
+                            <div class="d-flex flex-row align-items-center">
+                                <RadzenImage Path="@($"img/{enemy.Title}.jpg")" Class="rounded-circle float-left mr-3" Style="width: 50px; height: 50px;" />
+                                <div>
+                                   
+                                    <div> HP : <RadzenBadge BadgeStyle="BadgeStyle.Success" Text=@($"{enemy.HitPoint}") /> </div>
+                                    <div> ATT: <RadzenBadge BadgeStyle="BadgeStyle.Danger" Text=@($"{enemy.Attack}") Class="mr-1" /></div>
+                                    <div> DEF: <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text=@($"{enemy.Defense}") Class="mr-1" /></div>
+                                </div>
+                            </div>
+                        </RadzenCard>
+                    </Template>
+                </RadzenDataList>
+            </RadzenCard>
+        </ChildContent>
+        <SummaryTemplate>
+            <RadzenCard class="mt-3">
+                <b>@stateService.TotalUnits.Count() Heros Survived</b>
+            </RadzenCard>
+        </SummaryTemplate>
+    </RadzenPanel>
+</div>
+
+</div>
+
+
+
+
+
+@code {
+    [Parameter] public GameLevel Level { get; set; }
+    private int value = 50;
+    public EventConsole console;
+    private IList<Unit> selectedUnits { get; set; }
+
+    protected override void OnInitialized()
+    {
+        //   orders = dbContext.Orders.Include("Customer").Include("Employee").ToList();
+    }
+
+    void RowSelect(DataGridRowMouseEventArgs<Unit> RowSelected)
+    {
+        var num = ((double)RowSelected.Data.HitPoint / (RowSelected.Data.HitPoint + 80)) * 100;
+        value = Convert.ToInt32(Math.Round(num, 0));
+        console.Log($"{RowSelected.Data.Name} -- {RowSelected.Data.Title} Selected, ready to fight");
+    }
+
+}
