@@ -18,7 +18,7 @@ namespace BlazorGame.Shared.Models
         public int Id { get; set; }
         public UnitType Title { get; set; }
 
-        public bool isSurvived => true;
+        public bool isSurvived { get; set; }  = true;
         public string? Name { get; set; }
         public int HitPoint { get; set; }
 

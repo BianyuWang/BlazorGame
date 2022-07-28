@@ -106,6 +106,23 @@ namespace BlazorGame.Client.Service
            return MyUnitList;
         }
 
-    
+        public async Task<List<Unit>> RandomSortMonster()
+        {
+            Random rd = new Random();
+            int index = 0;
+            Unit temp;
+            for (int i = 0; i < ComMonster.Count; i++)
+            {
+                index = rd.Next(0, ComMonster.Count - 1);
+                if (index != i)
+                {
+                    temp = ComMonster[i];
+                    ComMonster[i] = ComMonster[index];
+                    ComMonster[index] = temp;
+                }
+            }
+
+            return ComMonster;
+        }
     }
 }

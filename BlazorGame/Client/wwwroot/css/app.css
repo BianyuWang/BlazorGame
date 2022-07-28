@@ -13,6 +13,56 @@ a, .btn-link {
 }
 
 
+.console {
+    height: 400px;
+    margin: 16px 0;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 16px 0;
+}
+
+.console-content {
+    flex: 1;
+    overflow: auto;
+}
+
+.console-header {
+    display: flex;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding: 16px;
+}
+
+.console-title {
+    flex: 1;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.console-clear {
+    appearance: none;
+    border: none;
+    outline: none !important;
+    background: transparent;
+}
+
+.console-message {
+    margin: 8px;
+    padding: 4px 0;
+    display: flex;
+    align-items: baseline;
+    color: #000000;
+    background: rgba(210,233,255,0.8);
+    border-radius: 4px;
+}
+
+.console-message-time {
+    font-size: 12px;
+    padding: 2px 4px;
+}
+
 
 .btn-primary {
     color: #fff;

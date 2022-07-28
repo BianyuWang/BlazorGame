@@ -1,5 +1,14 @@
 ﻿@inject IStateService stateService
 @inject IJSRuntime JSRuntime
+@inject IUnitService unitService;
+<style>
+.died
+{
+   -webkit-filter: grayscale(100%);
+        filter: grayscale(100%);
+}
+
+</style>
 <div class="row">
     <div class="col-2">
           <RadzenPanel AllowCollapse="true" Style="margin: 5px auto;">
@@ -10,16 +19,18 @@
         </HeaderTemplate>
         <ChildContent>
                    <RadzenCard>
-                <h3 class="h5">Your Hero</h3>
+      
                 <RadzenDataGrid AllowFiltering="false" RowClick="@RowSelect"  AllowPaging="true" PageSize=3
                             AllowSorting="false" Data="@stateService.TotalUnits" TItem="Unit" ColumnWidth="50px"
+                            AllowRowSelectOnRowClick = "@stateService.allowSelect"  @ref = "@DataGridHero"
                             SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedUnits>
                     <Columns>
-                        <RadzenDataGridColumn TItem="Unit" Property="Photo" Title="Hero" Sortable="false" Filterable="false">
+                        <RadzenDataGridColumn TItem="Unit" Property="Photo"  Sortable="false" Filterable="false"  >
                             <Template Context="hero">
                                <RadzenCard >                                               
                             <div class="d-flex flex-row align-items-center">
-                                <RadzenImage Path="@($"img/{hero.Title}.jpg")" Class="rounded-circle float-left mr-3" Style="width: 50px; height: 50px;" />
+                             
+                                <RadzenImage   Path="@($"img/{hero.Title}.jpg")" Class="rounded-circle float-left mr-3" Style="width: 50px; height: 50px;"  />
                                 <div>
                                    
                                     <div> HP : <RadzenBadge BadgeStyle="BadgeStyle.Success" Text=@($"{hero.HitPoint}") /> </div>
@@ -43,7 +54,7 @@
     </RadzenPanel>
     </div>
 <div class="col-8">
-       @if (selectedUnits != null)
+       @if (selectedUnits != null && selectedUnits.Count()!=0)
     {
         <div class="row my-4 ">
             <div class="col-lg-1 col-md-4 col-sm-12">
@@ -57,9 +68,22 @@
                 </RadzenCard>
             </div>
             <div class="col-lg-1 col-md-4 col-sm-12">
-                <RadzenImage Path="@($"img/wizard.jpg")" style="width: 80px; height: 80px; border-radius: 8px; margin-right: 8px;" />
-                HP: 80
-            </div>
+
+              
+                    @if (stateService.IsBattleBegin)
+                    {
+                          <RadzenImage Path="@($"img/monster{@stateService.currentMonster.Title}.jpg")" style="width: 80px; height: 80px; border-radius: 8px; margin-right: 8px;" />
+                     <span> HP: @stateService.currentMonster.HitPoint</span> 
+                    }
+                    else
+                    { <RadzenImage Path="@($"img/question.png")" style="width: 80px; height: 80px; border-radius: 8px; margin-right: 8px;" />
+                         <span> HP: ??</span>
+                    }
+                </div>
+        </div>
+        <div class="d-flex flex-row justify-content-center align-items-center" style="margin: 20px auto;">
+
+               <RadzenButton Click=@Attack Text="Attack" Icon="report" ButtonStyle="ButtonStyle.Danger"  Disabled="@stateService.IsBattleBegin"  />
         </div>
     }
       <EventConsole @ref=@console />
@@ -76,16 +100,51 @@
         <ChildContent>
             <RadzenCard>
                 <RadzenDataList PageSize="3" WrapItems="true" AllowPaging="true" 
-                                Data="@stateService.TotalMonsters" TItem="Unit" >
+                                Data="@stateService.TotalMonsters"  TItem="Unit" >
                     <Template Context="enemy">
                         <RadzenCard >                                               
                             <div class="d-flex flex-row align-items-center">
-                                <RadzenImage Path="@($"img/{enemy.Title}.jpg")" Class="rounded-circle float-left mr-3" Style="width: 50px; height: 50px;" />
-                                <div>
+                                @if((int)Level<=(int)GameLevel.Intermediate){
+                                        <RadzenImage Path="@($"img/monster{enemy.Title}.jpg")" Class="rounded-circle float-left mr-3" Style="width: 50px; height: 50px;" />
+                                    } 
+                                    else
+                                    {
+                                        
+                                         <RadzenImage Path="@($"img/question.png")" Class="rounded-circle float-left mr-3" Style="width: 50px; height: 50px;" />
+                              
+                                    }
+                                    <div>
                                    
-                                    <div> HP : <RadzenBadge BadgeStyle="BadgeStyle.Success" Text=@($"{enemy.HitPoint}") /> </div>
-                                    <div> ATT: <RadzenBadge BadgeStyle="BadgeStyle.Danger" Text=@($"{enemy.Attack}") Class="mr-1" /></div>
-                                    <div> DEF: <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text=@($"{enemy.Defense}") Class="mr-1" /></div>
+                                    <div> HP : <RadzenBadge BadgeStyle="BadgeStyle.Success" >
+                                                @if (Level == GameLevel.Easy)
+                                                {
+                                                    <span> @($"{enemy.HitPoint}")</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>??</span>
+                                                }
+
+                                    </RadzenBadge> </div>
+                                    <div> ATT: <RadzenBadge BadgeStyle="BadgeStyle.Danger" Class="mr-1" >
+                                            @if (Level == GameLevel.Easy)
+                                                {
+                                                    <span> @($"{enemy.Attack}")</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>??</span>
+                                                }</RadzenBadge></div>
+                                    <div> DEF: <RadzenBadge BadgeStyle="BadgeStyle.Secondary"  Class="mr-1" >
+                                             @if (Level == GameLevel.Easy)
+                                                {
+                                                    <span> @($"{enemy.Defense}")</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>??</span>
+                                                }
+                                    </RadzenBadge></div>
                                 </div>
                             </div>
                         </RadzenCard>
@@ -113,16 +172,103 @@
     public EventConsole console;
     private IList<Unit> selectedUnits { get; set; }
 
-    protected override void OnInitialized()
+    public RadzenDataGrid<Unit> DataGridHero;
+
+
+
+    public void Dispose()
     {
-        //   orders = dbContext.Orders.Include("Customer").Include("Employee").ToList();
+
+        stateService.OnChange -= StateHasChanged;
+
     }
+    protected override async Task OnInitializedAsync()
+    {
+        stateService.OnChange += StateHasChanged;
+        stateService.TotalMonsters = await unitService.RandomSortMonster();
+    }
+
 
     void RowSelect(DataGridRowMouseEventArgs<Unit> RowSelected)
     {
-        var num = ((double)RowSelected.Data.HitPoint / (RowSelected.Data.HitPoint + 80)) * 100;
+        if (!RowSelected.Data.isSurvived)
+        {
+            console.Log($"This hero is dead, please choose another hero");
+
+            selectedUnits.Clear();
+        }
+        else
+        {
+            if (!stateService.IsBattleBegin)
+            {
+                var num = ((double)RowSelected.Data.HitPoint / (RowSelected.Data.HitPoint + 80)) * 100;
+                value = Convert.ToInt32(Math.Round(num, 0));
+                console.Log($"{RowSelected.Data.Name} -- {RowSelected.Data.Title} Selected, ready to fight");
+            }
+        }
+
+
+
+    }
+
+    public async Task Attack()
+    {
+        stateService.currentHero = selectedUnits.First();
+        stateService.IsBattleBegin = true;
+        stateService.currentMonster = stateService.TotalMonsters.Where(m => m.isSurvived == true).First();
+        ResetValue();
+        console.Log($" Monster { stateService.currentMonster.Name} -- { stateService.currentMonster.Title} Ready to fight");
+        await  Attacking(AttackParty.Hero);
+
+    }
+
+    public void ResetValue()
+    {
+        var num = ((double)stateService.currentHero.HitPoint / (stateService.currentHero.HitPoint + stateService.currentMonster.HitPoint)) * 100;
         value = Convert.ToInt32(Math.Round(num, 0));
-        console.Log($"{RowSelected.Data.Name} -- {RowSelected.Data.Title} Selected, ready to fight");
+    }
+
+    public async Task Attacking(AttackParty attackParty)
+    {
+
+        if (attackParty is AttackParty.Hero)
+        {
+
+            console.Log($"Your Hero Attack !  -- Causes {stateService.currentHero.Attack-stateService.currentMonster.Defense} damage");
+            stateService.Attacking(attackParty);
+            console.Log($" Monster {stateService.currentMonster.Name} -- {stateService.currentMonster.Title} has {stateService.currentMonster.HitPoint} HP left !");
+            ResetValue();
+         
+
+            if (!stateService.currentMonster.isSurvived)
+            {
+                console.Log($" Monster {stateService.currentMonster.Name} -- {stateService.currentMonster.Title} DIED! ");
+            
+               selectedUnits.Clear();
+                StateHasChanged();
+                return;
+            }
+        }
+        else
+        {
+            console.Log($"Monster Attack !  -- Causes {stateService.currentMonster.Attack-stateService.currentHero.Defense} damage");
+            stateService.Attacking(attackParty);
+            console.Log($" Your Hero {stateService.currentHero.Name} -- {stateService.currentHero.Title} has {stateService.currentHero.HitPoint} HP left !");
+            ResetValue();
+           
+            if (!stateService.currentHero.isSurvived)
+            {  console.Log($" Your Hero {stateService.currentHero.Name} -- {stateService.currentHero.Title} DIED! ");          
+                    await DataGridHero.Reload();
+               selectedUnits.Clear();          
+                StateHasChanged();
+                return;
+            }
+        }
+
+        attackParty = attackParty == AttackParty.Hero ? AttackParty.Enemy : AttackParty.Hero;
+        StateHasChanged();
+         await Task.Delay(2000);
+        await Attacking(attackParty);
     }
 
 }

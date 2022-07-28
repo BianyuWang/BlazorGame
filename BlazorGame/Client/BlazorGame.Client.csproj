@@ -15,6 +15,7 @@
     <PackageReference Include="Radzen.Blazor" Version="3.19.3" />
   </ItemGroup>
 
+
   <ItemGroup>
     <ProjectReference Include="..\Shared\BlazorGame.Shared.csproj" />
   </ItemGroup>

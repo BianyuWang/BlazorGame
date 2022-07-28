@@ -9,7 +9,6 @@ namespace BlazorGame.Shared.Models
     public enum GameLevel
     {
 
-
         Easy,
         Intermediate,
         Hard,
@@ -17,5 +16,11 @@ namespace BlazorGame.Shared.Models
 
     }
 
+    public enum AttackParty
+    { 
+    Hero,
+
+        Enemy
+    }
    
 }

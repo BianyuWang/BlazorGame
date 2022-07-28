@@ -45,12 +45,13 @@ namespace BlazorGame.Server.Service
                 // need to do something here 
                 }
             }
-            if (response != null&& response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                dynamic details = JsonConvert.DeserializeObject<ExpandoObject>(response.Content, new ExpandoObjectConverter());            
-                name = ((IEnumerable<dynamic>)details.data).First().name.firstname.name;                                     
+                dynamic details = JsonConvert.DeserializeObject<ExpandoObject>(response.Content, new ExpandoObjectConverter());
+                name = ((IEnumerable<dynamic>)details.data).First().name.firstname.name;
             }
-           
+            else
+                name = "name";
 #pragma warning disable CS8603 // Possible null reference return.
             return name;
 #pragma warning restore CS8603 // Possible null reference return.

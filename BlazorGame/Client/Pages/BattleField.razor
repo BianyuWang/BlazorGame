@@ -12,7 +12,7 @@
         <div class="col-lg-6 col-md-4 col-sm-12">
             <RadzenCard>
                 <h3 class="h5">Your Hero</h3>
-                <RadzenDataGrid AllowFiltering="false" RowClick="@RowSelect" AllowPaging="false"
+                <RadzenDataGrid AllowFiltering="false" AllowPaging="false"
                             AllowSorting="true" Data="@StateService.TotalUnits" TItem="Unit" ColumnWidth="50px"
                             SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedUnits>
                     <Columns>
@@ -232,12 +232,6 @@
         StateService.gameLevel = level;
     }
 
-    void RowSelect(DataGridRowMouseEventArgs<Unit> RowSelected)
-    {
-        var num = ((double)RowSelected.Data.HitPoint / (RowSelected.Data.HitPoint + 80)) * 100;
-        value = Convert.ToInt32(Math.Round(num, 0));
-
-    }
 
     //void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => tooltipService.Open(elementReference, "Some content", options);
 

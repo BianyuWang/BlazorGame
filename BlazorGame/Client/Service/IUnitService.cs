@@ -9,7 +9,8 @@ namespace BlazorGame.Client.Service
         List<Unit> ComMonster { get; set; }
         Task<List<Unit>> GeneraterMosterList();
         Task<Unit> AddUnit(UnitType unitType);
-
+    
+        Task<List<Unit>> RandomSortMonster();
         void DeleteUnit(Unit unit);
 
         void Attack(Unit Attacker, Unit Defender);
